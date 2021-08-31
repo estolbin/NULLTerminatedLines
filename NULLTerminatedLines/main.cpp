@@ -1,16 +1,25 @@
 #include<iostream>
 #include<Windows.h>
+
+#define tab "\t\t"
+
 using namespace std;
 
-int StrLen(char str[]); // принимает строку, возвращает длину строки
+
+int StrLen(char str[]); // РїСЂРёРЅРёРјР°РµС‚ СЃС‚СЂРѕРєСѓ, РІРѕР·РІСЂР°С‰Р°РµС‚ РґР»РёРЅСѓ СЃС‚СЂРѕРєРё
 
 void to_upper(char str[]);
 void to_lower(char str[]);
 void shrink(char str[]);
 
 bool is_bin(char str[]);
+bool is_integer(char str[]);
+bool is_hex(char str[]);
 
-void main()
+int bin2dec(char str[]);
+int arr2int(char str[]);
+
+int main()
 {
 	setlocale(LC_ALL, "");
 	//char str[] = { 'H', 'e', 'l', 'l', 'o', 0};
@@ -22,18 +31,30 @@ void main()
 
 	const int n = 20;
 	char str[n];
-	cout << "Введите строку: "; //cin >> str;
+	cout << "Р’РІРµРґРёС‚Рµ СЃС‚СЂРѕРєСѓ: "; //cin >> str;
 	cin.getline(str, n);
 	cout << str << endl;
-	cout << "Длина введенной строки: " << StrLen(str) << endl;
+	cout << "Р”Р»РёРЅР° РІРІРµРґРµРЅРЅРѕР№ СЃС‚СЂРѕРєРё: " << StrLen(str) << endl;
 
 	to_upper(str);
 	to_lower(str);
 	shrink(str);
-	cout << "Двоичная строка: " << is_bin(str) << endl;
+	cout << "Р”РІРѕРёС‡РЅР°СЏ СЃС‚СЂРѕРєР°: " << is_bin(str) << endl;
 	char str1[8] = "01001";
-	cout << "Двоичная строка: " << str1 << "\t" << is_bin(str1) << endl;
+	cout << "Р”РІРѕРёС‡РЅР°СЏ СЃС‚СЂРѕРєР°: " << str1 << tab << is_bin(str1) << endl;
 
+	char h_str[9] = "0x1234FF";
+	cout << "Р­С‚Рѕ С€РµСЃС‚РЅР°РґС†Р°С‚РёСЂРёС‡РЅР°СЏ: " << h_str << tab << is_hex(h_str) << endl;
+	cout << "Р­С‚Рѕ С€РµСЃС‚РЅР°РґС†Р°С‚РёСЂРёС‡РЅР°СЏ: " << str << tab << is_hex(str) << endl;
+
+	char d_str[8] = "0123459";
+	cout << "Р­С‚Рѕ РґРµСЃСЏС‚РёС‡РЅР°СЏ: " << d_str << tab << is_integer(d_str) << endl;
+	cout << "Р­С‚Рѕ РґРµСЃСЏС‚РёС‡РЅР°СЏ: " << str << tab << is_integer(str) << endl;
+
+	cout << "РџРµСЂРµРІРѕРґ РґРІРѕРёС‡РЅРѕР№ РІ РґРµСЃСЏС‚РёС‡РЅСѓСЋ: " << bin2dec(str1) << endl;
+
+
+	return 0;
 }
 
 int StrLen(char str[])
@@ -55,7 +76,7 @@ void to_upper(char str[])
 			str[i] -= 32;
 		}
 	}
-	cout << "Строка, преобразованная в верхний регистр: " << str << endl;
+	cout << "РЎС‚СЂРѕРєР°, РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРЅР°СЏ РІ РІРµСЂС…РЅРёР№ СЂРµРіРёСЃС‚СЂ: " << str << endl;
 
 }
 
@@ -66,7 +87,7 @@ void to_lower(char str[])
 		if ((65 <= str[i] && str[i] <= 90) || (-64 <= str[i] && str[i] <= -33)) str[i] += 32;
 
 	}
-	cout << "Строка в нижнем регистре: " << str << endl;
+	cout << "РЎС‚СЂРѕРєР° РІ РЅРёР¶РЅРµРј СЂРµРіРёСЃС‚СЂРµ: " << str << endl;
 }
 
 void shrink(char str[])
@@ -82,7 +103,7 @@ void shrink(char str[])
 	}
 	str[j] = 0;
 
-	cout << "Без пробелов: " << str << endl;
+	cout << "Р‘РµР· РїСЂРѕР±РµР»РѕРІ: " << str << endl;
 }
 
 bool is_bin(char str[])
@@ -93,4 +114,56 @@ bool is_bin(char str[])
 		if (!(res && (str[i] == '0' || str[i] == '1'))) res = false;
 	}
 	return res;
+}
+
+bool is_integer(char str[])
+{
+	for (int i = 0;str[i];i++)
+	{
+		if (str[i] >= 48 && str[i] <= 57) return true;
+	}
+	return false;
+}
+
+bool is_hex(char str[])
+{
+	
+	for (int i = 0; str[i]; i++)
+	{
+		if ((str[i] >= 48 && str[i] <= 57) || (str[i] >= 65 && str[i] <= 70)) return true;
+	}
+	return false;
+}
+
+int bin2dec(char str[])
+{
+	if (is_bin(str))
+	{
+		int decnum=0,i=1,rem;
+		int binnum = arr2int(str);
+		while (binnum != 0)
+		{
+			rem = binnum%10;
+			decnum = decnum + (rem * i);
+			i = i*2;
+			binnum = binnum/10;
+		}
+		return decnum;
+	} 
+	else
+	{
+		return 0;
+	}
+}
+
+int arr2int(char str[])
+{
+	int i = 0, num = 0;
+	for (;str[i];i++)
+	{
+		num += int(str[i]);
+		num *= 10;
+	}
+
+	return num;
 }
