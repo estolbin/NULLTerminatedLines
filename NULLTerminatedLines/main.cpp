@@ -6,18 +6,13 @@
 using namespace std;
 
 
-int StrLen(char str[]); // принимает строку, возвращает длину строки
+int StrLen(char str[]); // ��������� ������, ���������� ����� ������
 
 void to_upper(char str[]);
-void to_lower(char str[]);
 void shrink(char str[]);
+void remove_symbol(char str[], char symbol);
 
-bool is_bin(char str[]);
-bool is_integer(char str[]);
-bool is_hex(char str[]);
-
-int bin2dec(char str[]);
-int arr2int(char str[]);
+bool is_palindrome(char str[]);
 
 int main()
 {
@@ -29,32 +24,22 @@ int main()
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 
-	const int n = 20;
-	char str[n];
-	cout << "Введите строку: "; //cin >> str;
-	cin.getline(str, n);
+
+	const int n = 256;
+	//char str[n] = "������       �����     ��     �����      �����-���";
+	char str[n] = "��������� ����� �����";
+	cout << "������� ������: "; //cin >> str;
+	//cin.getline(str, n);
 	cout << str << endl;
-	cout << "Длина введенной строки: " << StrLen(str) << endl;
-
-	to_upper(str);
-	to_lower(str);
+	cout << "����� ��������� ������: " << StrLen(str) << endl;
+	//to_upper(str);
 	shrink(str);
-	cout << "Двоичная строка: " << is_bin(str) << endl;
-	char str1[8] = "01001";
-	cout << "Двоичная строка: " << str1 << tab << is_bin(str1) << endl;
-
-	char h_str[9] = "0x1234FF";
-	cout << "Это шестнадцатиричная: " << h_str << tab << is_hex(h_str) << endl;
-	cout << "Это шестнадцатиричная: " << str << tab << is_hex(str) << endl;
-
-	char d_str[8] = "0123459";
-	cout << "Это десятичная: " << d_str << tab << is_integer(d_str) << endl;
-	cout << "Это десятичная: " << str << tab << is_integer(str) << endl;
-
-	cout << "Перевод двоичной в десятичную: " << bin2dec(str1) << endl;
+	cout << str << endl;
+	cout << is_palindrome(str) << endl;
+	cout << str << endl;
 
 
-	return 0;
+
 }
 
 int StrLen(char str[])
@@ -66,104 +51,54 @@ int StrLen(char str[])
 
 void to_upper(char str[])
 {
-
 	for (int i = 0; str[i]; i++)
 	{
-		// latin 97-122. Capital 65-90
-		// cyrilic -32-0. Capital -64 -33
-		if ((97 <= str[i] && str[i] <= 122) || (-32 <= int(str[i]) && str[i] <= 0))
-		{
+		if (
+			str[i] >= 'a' && str[i] <='z' || 
+			str[i] >= '�' && str[i] <= '�'
+			)
 			str[i] -= 32;
-		}
 	}
-	cout << "Строка, преобразованная в верхний регистр: " << str << endl;
-
-}
-
-void to_lower(char str[])
-{
-	for (int i = 0; str[i]; i++)
-	{
-		if ((65 <= str[i] && str[i] <= 90) || (-64 <= str[i] && str[i] <= -33)) str[i] += 32;
-
-	}
-	cout << "Строка в нижнем регистре: " << str << endl;
 }
 
 void shrink(char str[])
 {
-	int i = 0, j = 0;
-	for (; str[i]; i++)
-	{
-		if (str[i] != ' ')
-		{
-			str[j] = str[i];
-			++j;
-		}
-	}
-	str[j] = 0;
-
-	cout << "Без пробелов: " << str << endl;
-}
-
-bool is_bin(char str[])
-{
-	bool res = true;
 	for (int i = 0; str[i]; i++)
 	{
-		if (!(res && (str[i] == '0' || str[i] == '1'))) res = false;
+		while (str[i] == ' ' && str[i + 1] == ' ')
+		{
+			for (int j = i; str[j]; j++) str[j] = str[j + 1];
+		}
 	}
-	return res;
 }
 
-bool is_integer(char str[])
+void remove_symbol(char str[], char symbol)
 {
-	for (int i = 0;str[i];i++)
-	{
-		if (str[i] >= 48 && str[i] <= 57) return true;
-	}
-	return false;
-}
-
-bool is_hex(char str[])
-{
-	
 	for (int i = 0; str[i]; i++)
 	{
-		if ((str[i] >= 48 && str[i] <= 57) || (str[i] >= 65 && str[i] <= 70)) return true;
-	}
-	return false;
-}
-
-int bin2dec(char str[])
-{
-	if (is_bin(str))
-	{
-		int decnum=0,i=1,rem;
-		int binnum = arr2int(str);
-		while (binnum != 0)
+		while (str[i] == symbol)
 		{
-			rem = binnum%10;
-			decnum = decnum + (rem * i);
-			i = i*2;
-			binnum = binnum/10;
+			for (int j = i; str[j]; j++) str[j] = str[j + 1];
 		}
-		return decnum;
-	} 
-	else
-	{
-		return 0;
 	}
 }
 
-int arr2int(char str[])
+bool is_palindrome(char str[])
 {
-	int i = 0, num = 0;
-	for (;str[i];i++)
-	{
-		num += int(str[i]);
-		num *= 10;
-	}
+	char* buffer = new char[StrLen(str) + 1]{};
+	for (int i = 0; str[i]; i++) buffer[i] = str[i];
 
-	return num;
+	remove_symbol(buffer, ' ');
+	int n = StrLen(buffer);
+	to_upper(buffer);
+	for (int i = 0; i < n / 2; i++)
+	{
+		if (buffer[i] != buffer[n - 1 - i])
+		{
+			delete[] buffer;
+			return false;
+		}
+	}
+	delete[] buffer;
+	return true;
 }
