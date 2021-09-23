@@ -1,6 +1,8 @@
 #include<iostream>
 #include<Windows.h>
 #include<math.h>
+#include<regex>
+#include<string>
 
 #define tab "\t\t"
 
@@ -23,6 +25,13 @@ int arr2int(char str[]);
 int hex2dec(char str[]);
 int convert_to_dec(int num_sys, char str[]);
 int hex_sym_to_int(char sym);
+
+int dec2bin(int num);
+char dec2hex(int num);
+char* convert_from_dec(int num, int num_sys);
+
+bool is_mac_address(char str[]);
+bool is_ip_address(char str[]);
 
 int main()
 {
@@ -188,4 +197,49 @@ int hex_sym_to_int(char sym)
 	else if (sym == 'e' || sym == 'E') {res = 14;}
 	else if (sym == 'f' || sym == 'F') {res = 15;}
 	return res;	
+}
+
+
+int dec2bin(int num)
+{
+	return convert_from_dec(num, 2);
+}
+
+char dec2hex(int num)
+{
+	return convert_from_dec(num, 16);
+}
+
+char* convert_from_dec(int num, int num_sys)
+{
+	int arr[64], i=0, r;
+	while (num != 0)
+	{
+		r = num % num_sys;
+		arr[i++] = r;
+		num /= num_sys;
+	}
+
+	int ii = 0;
+	char* tmp = new char[i + 1]{};
+	for (int j = i -1; j>=0; j--) {
+		tmp[ii++] = arr[j];
+	}
+
+	return tmp;
+}
+
+bool is_mac_address(char str[])
+{
+    const regex pattern( "^([0-9A-Fa-f]{2}[:-]){5}" "([0-9A-Fa-f]{2})|([0-9a-" "fA-F]{4}\\.[0-9a-fA-F]" "{4}\\.[0-9a-fA-F]{4})$");
+	
+    return regex_match(str, pattern);
+}
+
+bool is_ip_address(char str[])
+{
+	const regex patter("(([\d]{1,3}.){3}[\d]{1,3})");
+
+	return regex_match(str, pattern);
+
 }
