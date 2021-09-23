@@ -1,5 +1,6 @@
 #include<iostream>
 #include<Windows.h>
+#include<math.h>
 
 #define tab "\t\t"
 
@@ -19,6 +20,10 @@ bool is_hex(char str[]);
 int bin2dec(char str[]);
 int arr2int(char str[]);
 
+int hex2dec(char str[]);
+int convert_to_dec(int num_sys, char str[]);
+int hex_sym_to_int(char sym);
+
 int main()
 {
 	setlocale(LC_ALL, "");
@@ -29,7 +34,7 @@ int main()
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 
-	const int n = 20;
+	const int n = 256;
 	char str[n];
 	cout << "Введите строку: "; //cin >> str;
 	cin.getline(str, n);
@@ -53,6 +58,8 @@ int main()
 
 	cout << "Перевод двоичной в десятичную: " << bin2dec(str1) << endl;
 
+	cout << "Перевод шестнадцатиричной в десятичную: " << hex2dec(h_str) << endl;
+
 
 	return 0;
 }
@@ -66,18 +73,14 @@ int StrLen(char str[])
 
 void to_upper(char str[])
 {
-
 	for (int i = 0; str[i]; i++)
 	{
-		// latin 97-122. Capital 65-90
-		// cyrilic -32-0. Capital -64 -33
-		if ((97 <= str[i] && str[i] <= 122) || (-32 <= int(str[i]) && str[i] <= 0))
-		{
+		if (
+			str[i] >= 'a' && str[i] <='z' || 
+			str[i] >= 'à' && str[i] <= 'ÿ'
+			)
 			str[i] -= 32;
-		}
 	}
-	cout << "Строка, преобразованная в верхний регистр: " << str << endl;
-
 }
 
 void to_lower(char str[])
@@ -92,17 +95,13 @@ void to_lower(char str[])
 
 void shrink(char str[])
 {
-	int i = 0, j = 0;
-	for (; str[i]; i++)
+	for (int i = 0; str[i]; i++)
 	{
-		if (str[i] != ' ')
+		while (str[i] == ' ' && str[i + 1] == ' ')
 		{
-			str[j] = str[i];
-			++j;
+			for (int j = i; str[j]; j++) str[j] = str[j + 1];
 		}
 	}
-	str[j] = 0;
-
 	cout << "Без пробелов: " << str << endl;
 }
 
@@ -137,23 +136,7 @@ bool is_hex(char str[])
 
 int bin2dec(char str[])
 {
-	if (is_bin(str))
-	{
-		int decnum=0,i=1,rem;
-		int binnum = arr2int(str);
-		while (binnum != 0)
-		{
-			rem = binnum%10;
-			decnum = decnum + (rem * i);
-			i = i*2;
-			binnum = binnum/10;
-		}
-		return decnum;
-	} 
-	else
-	{
-		return 0;
-	}
+	return convert_to_dec(2, str);
 }
 
 int arr2int(char str[])
@@ -166,4 +149,41 @@ int arr2int(char str[])
 	}
 
 	return num;
+}
+
+int hex2dec(char str[])
+{
+	return convert_to_dec(16, str);
+}
+
+int convert_to_dec(int num_sys, char str[])
+{
+
+	int in = 0, res = 0, num, len = StrLen(str)-1;
+	for (int i = len; i >= 0; i++)
+	{
+		if (('a' <= str[i] && str[i] <= 'f') || ('A' <= str[i] && str[i] <= 'F')) 
+		{ 
+			num = hex_sym_to_int(str[i]);
+		}
+		else 
+		{
+			num = (int)str[i];
+		}
+		res += (num * pow(num_sys, in));
+		in++;
+	}
+	return res;
+}
+
+int hex_sym_to_int(char sym)
+{
+	int res=0;
+	if (sym == 'a' || sym == 'A') {res = 10;} 
+	else if (sym == 'b' || sym == 'B') {res = 11;} 
+	else if (sym == 'c' || sym == 'C') {res = 12;}
+	else if (sym == 'd' || sym == 'D') {res = 13;}
+	else if (sym == 'e' || sym == 'E') {res = 14;}
+	else if (sym == 'f' || sym == 'F') {res = 15;}
+	return res;	
 }
