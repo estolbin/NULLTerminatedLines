@@ -31,33 +31,35 @@ int main()
 	//char str[] = "Hello";
 	//cout << str << endl;
 
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
+	// SetConsoleCP(1251);
+	// SetConsoleOutputCP(1251);
 
-	const int n = 256;
-	char str[n];
-	cout << "Введите строку: "; //cin >> str;
-	cin.getline(str, n);
-	cout << str << endl;
-	cout << "Длина введенной строки: " << StrLen(str) << endl;
+	// const int n = 256;
+	// char str[n];
+	// cout << "Введите строку: "; //cin >> str;
+	// cin.getline(str, n);
+	// cout << str << endl;
+	// cout << "Длина введенной строки: " << StrLen(str) << endl;
 
-	to_upper(str);
-	to_lower(str);
-	shrink(str);
-	cout << "Двоичная строка: " << is_bin(str) << endl;
-	char str1[8] = "01001";
-	cout << "Двоичная строка: " << str1 << tab << is_bin(str1) << endl;
+	// to_upper(str);
+	// to_lower(str);
+	// shrink(str);
+	// cout << "Двоичная строка: " << is_bin(str) << endl;
+	// char str1[8] = "01001";
+	// cout << "Двоичная строка: " << str1 << tab << is_bin(str1) << endl;
+
+	// char h_str[9] = "0x1234FF";
+	// cout << "Это шестнадцатиричная: " << h_str << tab << is_hex(h_str) << endl;
+	// cout << "Это шестнадцатиричная: " << str << tab << is_hex(str) << endl;
+
+	// char d_str[8] = "0123459";
+	// cout << "Это десятичная: " << d_str << tab << is_integer(d_str) << endl;
+	// cout << "Это десятичная: " << str << tab << is_integer(str) << endl;
+
+//	char str1[8] = "01001";
+//	cout << "Перевод двоичной в десятичную: " << bin2dec(str1) << endl;
 
 	char h_str[9] = "0x1234FF";
-	cout << "Это шестнадцатиричная: " << h_str << tab << is_hex(h_str) << endl;
-	cout << "Это шестнадцатиричная: " << str << tab << is_hex(str) << endl;
-
-	char d_str[8] = "0123459";
-	cout << "Это десятичная: " << d_str << tab << is_integer(d_str) << endl;
-	cout << "Это десятичная: " << str << tab << is_integer(str) << endl;
-
-	cout << "Перевод двоичной в десятичную: " << bin2dec(str1) << endl;
-
 	cout << "Перевод шестнадцатиричной в десятичную: " << hex2dec(h_str) << endl;
 
 
